@@ -1,0 +1,22 @@
+CREATE TABLE redemptions (
+    id SERIAL PRIMARY KEY,
+    transaction_id INT REFERENCES transactions(id) ON DELETE CASCADE,
+    voucher_id INT REFERENCES vouchers(id) ON DELETE CASCADE,
+    redeemed_points INT NOT NULL,
+    redeemed_value DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+DELETE FROM transactions;
+ALTER TABLE transactions 
+ADD COLUMN total_points INT NOT NULL, 
+ADD COLUMN total_value DECIMAL(10, 2) NOT NULL, 
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+DELETE FROM vouchers;
+ALTER TABLE vouchers 
+ADD COLUMN code VARCHAR(255) UNIQUE NOT NULL, 
+ADD COLUMN description TEXT, 
+ADD COLUMN points_required INT NOT NULL, 
+ADD COLUMN value DECIMAL(10, 2) NOT NULL, 
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
